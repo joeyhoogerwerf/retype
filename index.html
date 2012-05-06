@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<link rel="stylesheet" href="css/style.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="http://gsgd.co.uk/sandbox/jquery/easing/jquery.easing.1.3.js"></script>
+	<script>
+		var timeRunning = 0;
+	
+		$(function(){
+			
+			var currentLetterNr = 0;
+			var characterArray = $('#originalText').text().split("");
+			var gameStarted = 'false';
+
+			
+			$(window).keydown(function(e){
+				
+				if(String.fromCharCode(e.keyCode).toLowerCase() == characterArray[currentLetterNr]){
+					
+					if(gameStarted == 'false'){
+						gameStarted = 'true';
+						var timer = setInterval('timerEvent()', 10);
+					}
+						
+					$('body').append('<span class="staticLetter">' + characterArray[currentLetterNr] + '</span>');
+					$('span:last').css({'left':$('#originalText').position().left + 'px', 'top':$('#originalText').position().top + 'px'}).animate({top: '+=' + Math.floor((Math.random()*300) - 100), left: '+=' + Math.floor((Math.random()*300) - 100)}, 500, 'swing').fadeOut('slow');
+					
+					characterArray.shift();
+					$('#originalText').text(characterArray.join().replace(/,/g, ''));
+				}
+				
+				//Restart game.
+				if(characterArray.length == 0){
+					var finalTime = timeRunning;
+					gameStarted = 'false';
+					currentLetterNr = 0;
+					timeRunning = 0;
+					$('#time').text('Time: ' + timeRunning.toFixed(3));
+					clearInterval(timer);
+					$('#originalText').empty().text('abcdefghijklmnopqrstuvwxyz');
+					characterArray = $('#originalText').text().split("");
+					alert("Nice! Your time: " + finalTime.toFixed(3));
+				}
+			});
+		});
+		
+		function timerEvent()
+		{
+			timeRunning += 0.01;
+			
+			$('#time').text('Time: ' + timeRunning.toFixed(3));
+		}
+	</script>
+</head>
+<body>
+	<div id="cont1">
+		<p id="time">Time: </p>
+		<p id="originalText">abcdefghijklmnopqrstuvwxyz</p>
+	</div>
+</body>
+</html>
