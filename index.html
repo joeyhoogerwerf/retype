@@ -9,48 +9,29 @@
 	
 		$(function(){
 			
-			var currentLetterNr = 0;
 			var characterArray = $('#originalText').text().split("");
-			var gameStarted = 'false';
-
 			
 			$(window).keydown(function(e){
 				
-				if(String.fromCharCode(e.keyCode).toLowerCase() == characterArray[currentLetterNr]){
+				if(String.fromCharCode(e.keyCode).toLowerCase() == characterArray[0]){		
 					
-					if(gameStarted == 'false'){
-						gameStarted = 'true';
-						var timer = setInterval('timerEvent()', 10);
+					if(characterArray.length == 26){
+						var timer = setInterval(function(){
+							timeRunning += 0.01;
+							$('#time').text('Time: ' + timeRunning.toFixed(3));
+						}, 10);
 					}
 						
-					$('body').append('<span class="staticLetter">' + characterArray[currentLetterNr] + '</span>');
-					$('span:last').css({'left':$('#originalText').position().left + 'px', 'top':$('#originalText').position().top + 'px'}).animate({top: '+=' + Math.floor((Math.random()*300) - 100), left: '+=' + Math.floor((Math.random()*300) - 100)}, 500, 'swing').fadeOut('slow');
-					
+					$('body').append('<span class="staticLetter">' + characterArray[0] + '</span>');
+					$('span:last').css({'left':$('#originalText').position().left + 'px', 'top':$('#originalText').position().top + 'px'}).animate({top: '+=' + 300}, 500, 'easeOutBack').fadeOut('slow');
 					characterArray.shift();
 					$('#originalText').text(characterArray.join().replace(/,/g, ''));
-				}
-				
-				//Restart game.
-				if(characterArray.length == 0){
-					var finalTime = timeRunning;
-					gameStarted = 'false';
-					currentLetterNr = 0;
-					timeRunning = 0;
-					$('#time').text('Time: ' + timeRunning.toFixed(3));
-					clearInterval(timer);
-					$('#originalText').empty().text('abcdefghijklmnopqrstuvwxyz');
-					characterArray = $('#originalText').text().split("");
-					alert("Nice! Your time: " + finalTime.toFixed(3));
+					
+					if(characterArray.length == 0)
+						alert('You typed the alphabet in ' + timeRunning.toFixed(3) + ' seconds!!\n\nREFRESH TO PLAY AGAIN');
 				}
 			});
 		});
-		
-		function timerEvent()
-		{
-			timeRunning += 0.01;
-			
-			$('#time').text('Time: ' + timeRunning.toFixed(3));
-		}
 	</script>
 </head>
 <body>
